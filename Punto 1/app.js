@@ -40,6 +40,21 @@ class TaskManager {
         }
     }
 
+    // ----------------------------------------------------- EDIT BUTTON
+    
+    editTask(id) {
+        const task = this.tasks.find(task => task.id === id);
+        if (task) {
+            const newDescription = prompt('Editar descripción; ', task.description);
+            if (newDescription !== null && newDescription.trim() !== '') {
+                task.description = newDescription.trim();
+                this.saveTasks();
+                this.renderTasks();
+            }
+        }
+    }
+
+    // ----------------------------------------------------- EDIT BUTTON
     saveTasks() {
         localStorage.setItem('tasks', JSON.stringify(this.tasks));
     }
@@ -63,6 +78,18 @@ class TaskManager {
                 e.stopPropagation(); // Evitar que el evento se propague al elemento padre, ¿Por qué? Porque el evento click en el botón también se propaga al elemento li.
                 this.deleteTask(task.id);
             });
+
+            // ----------------------------------------------------- EDIT BUTTON
+
+            const editButton = document.createElement('button');
+            editButton.textContent = 'Editar';
+            editButton.addEventListener('click', (e) => {
+                e.stopImmediatePropagation();
+                this.editTask(task.id);
+            });
+
+            item.appendChild(editButton);
+            // ----------------------------------------------------- EDIT BUTTON
 
             item.appendChild(deleteButton);
             taskList.appendChild(item);
