@@ -34,9 +34,14 @@ class TaskManager {
     toggleTaskComplete(id) {
         const task = this.tasks.find(task => task.id === id);
         if (task) {
-            task.toggleComplete();
+            const newInstance = new Task(task.id,task.description,task.completed);
+            newInstance.toggleComplete()
+            this.tasks = this.tasks.map(t=>{
+                return (t.id === id ? newInstance: t)
+            })
             this.saveTasks();
-            this.renderTasks();
+            this.renderTasks()
+            
         }
     }
 
@@ -45,12 +50,16 @@ class TaskManager {
     editTask(id) {
         const task = this.tasks.find(task => task.id === id);
         if (task) {
-            const newDescription = prompt('Editar descripción; ', task.description);
-            if (newDescription !== null && newDescription.trim() !== '') {
                 task.description = newDescription.trim();
                 this.saveTasks();
                 this.renderTasks();
-            }
+            // const newDescription = prompt('Editar descripción; ', task.description);
+            // if (newDescription !== null && newDescription.trim() !== '') {
+            //     task.description = newDescription.trim();
+            //     this.saveTasks();
+            //     this.renderTasks();
+
+            // }
         }
     }
 
@@ -64,6 +73,7 @@ class TaskManager {
     }
 
     renderTasks() {
+        console.log(this.tasks)
         const taskList = document.getElementById('task-list');
         taskList.innerHTML = '';
         this.tasks.forEach(task => {
@@ -98,6 +108,9 @@ class TaskManager {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    console.log("hola")
+    const method = (localStorage.getItem("tasks"))
+    console.log(method)
     const taskManager = new TaskManager();
 
     const addTask = () => {
